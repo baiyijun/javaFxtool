@@ -144,21 +144,18 @@ public class IndexController extends IndexView {
     }
 
     private void initEvent() {
-        myTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                selectAction(newValue);
-            }
-        });
-        myButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                selectAction(myTextField.getText());
-                // TooltipUtil.showToast(myTextField.getText());
-                // TooltipUtil.showToast("test",Pos.BOTTOM_RIGHT);
-                // JOptionPane.showMessageDialog(null, "test");
-            }
-        });
+//        myTextField.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                selectAction(newValue);
+//            }
+//        });
+//        myButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent arg0) {
+//                selectAction(myTextField.getText());
+//            }
+//        });
     }
 
     private void initService() {
@@ -341,6 +338,6 @@ public class IndexController extends IndexView {
 
     @FXML
     private void xwintopLinkOnAction(ActionEvent event) throws Exception {
-        HttpClientUtil.openBrowseURLThrowsException("https://gitee.com/xwintop/xJavaFxTool-spring");
+      //  HttpClientUtil.openBrowseURLThrowsException("https://gitee.com/xwintop/xJavaFxTool-spring");
     }
 }

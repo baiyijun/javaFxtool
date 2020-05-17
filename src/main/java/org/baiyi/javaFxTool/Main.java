@@ -21,8 +21,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 /**
  * @ClassName: Main
  * @Description: 启动类
- * @author: xufeng
- * @date: 2017年11月10日 下午4:34:11
+ * @author: bai
+ * @date:
  */
 @SpringBootApplication
 @Slf4j
