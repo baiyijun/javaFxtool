@@ -18,7 +18,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class PathWatchToolView implements Initializable {
+public abstract class FileAnaylizeView implements Initializable {
     @FXML
     protected TextField watchPathTextField;
     @FXML
@@ -28,17 +28,7 @@ public abstract class PathWatchToolView implements Initializable {
     @FXML
     protected Button watchButton;
     @FXML
-    protected TextField wsAddress;
-    @FXML
-    protected TextField mqAddress;
-    @FXML
-    protected TextField dbAddress;
-    @FXML
-    protected TextField dbUser;
-    @FXML
-    protected TextField dbPass;
-    @FXML
-    protected TextField dbServer;
+    protected TextField ourcode;
     @FXML
     protected TextArea watchLogTextArea;
 

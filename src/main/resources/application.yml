@@ -1,11 +1,39 @@
 server:
-    port: 10820
+  port: 10820
 spring:
-    jmx: 
-        enabled: false
+  jmx:
+    enabled: false
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+      settings:
+        web-allow-others: true
+  datasource:
+    platform: h2
+    url: jdbc:h2:~/test    #test是我创建的数据库名
+    username: sa
+    password:
+    schema: classpath:schema.sql #程序运行时，使用schema.sql来创建数据库中的表
+    data: classpath:data.sql  #程序运行时，使用data.sql来创建初始数据
+    name: test
+    type: com.alibaba.druid.pool.DruidDataSource    #使用阿里druid连接池
+    druid:
+      min-idle: 2
+      initial-size: 5
+      max-active: 10
+      max-wait: 5000
+      validation-query: select 1
 
+#  datasource:
+#    name: oracle
+#    druid:
+#      driver-class-name: oracle.jdbc.driver.OracleDriver
+#      url: jdbc:oracle:thin:@10.231.199.153:1521/orcl
+#      username: opension_1010
+#      password: opension
 javafx:
-#    title: 我的javaFx工具集合
-    appicons: /images/icon.jpg
-    stage:
-        resizable: true
+  title: 我的javaFx工具集合
+  appicons: /images/icon.jpg
+  stage:
+    resizable: true

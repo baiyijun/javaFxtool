@@ -1,17 +1,16 @@
 package org.baiyi.javaFxTool.utils;
 
-import org.baiyi.javaFxTool.model.ToolFxmlLoaderConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.lang3.StringUtils;
+import org.baiyi.javaFxTool.configration.ToolFxmlLoaderConfiguration;
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.dom4j.tree.DefaultAttribute;
-import org.dom4j.tree.DefaultElement;
 
 import java.awt.*;
 import java.io.File;
@@ -111,13 +110,13 @@ public class XJavaFxSystemUtil {
                     List<Element> elements = root.elements("ToolFxmlLoaderConfiguration");
                     for (Element configurationNode : elements) {
                         ToolFxmlLoaderConfiguration toolFxmlLoaderConfiguration = new ToolFxmlLoaderConfiguration();
-                        List<DefaultAttribute> attributes = configurationNode.attributes();
-                        for (DefaultAttribute configuration : attributes) {
+                        List<Attribute> attributes = configurationNode.attributes();
+                        for (Attribute configuration : attributes) {
                             BeanUtils.copyProperty(toolFxmlLoaderConfiguration, configuration.getName(),
                                     configuration.getValue());
                         }
-                        List<DefaultElement> childrenList = configurationNode.elements();
-                        for (DefaultElement configuration : childrenList) {
+                        List<Element> childrenList = configurationNode.elements();
+                        for (Element configuration : childrenList) {
                             BeanUtils.copyProperty(toolFxmlLoaderConfiguration, configuration.getName(),
                                     configuration.getStringValue());
                         }

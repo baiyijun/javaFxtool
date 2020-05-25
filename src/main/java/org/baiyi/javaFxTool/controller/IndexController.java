@@ -1,15 +1,11 @@
 package org.baiyi.javaFxTool.controller;
 
-import com.xwintop.xcore.util.HttpClientUtil;
 import com.xwintop.xcore.util.javafx.AlertUtil;
 import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -22,7 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.baiyi.javaFxTool.model.ToolFxmlLoaderConfiguration;
+import org.baiyi.javaFxTool.configration.ToolFxmlLoaderConfiguration;
 import org.baiyi.javaFxTool.services.IndexService;
 import org.baiyi.javaFxTool.utils.Config;
 import org.baiyi.javaFxTool.utils.JavaFxViewUtil;
@@ -238,7 +234,7 @@ public class IndexController extends IndexView {
             AbstractFxmlView fxmlView = SpringUtil.getBean(viewClass);
             if (singleWindowBootCheckBox.isSelected()) {
 //				Main.showView(viewClass, Modality.NONE);
-                Stage newStage = JavaFxViewUtil.getNewStage(title, iconPath, fxmlView.getView());
+                Stage newStage = JavaFxViewUtil.getNewStage(title==null?"":title, iconPath, fxmlView.getView());
                 newStage.setOnCloseRequest((WindowEvent event) -> {
                     setControllerOnCloseRequest(fxmlView.getPresenter(), event);
                 });

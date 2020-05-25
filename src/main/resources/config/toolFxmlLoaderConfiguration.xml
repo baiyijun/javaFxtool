@@ -4,11 +4,11 @@
 <!--                                 menuId="javaFxTools" resourceBundleName="locale.Menu" isMenu="true"/>-->
 
     <ToolFxmlLoaderConfiguration title="fileTools"
-                                 menuId="fileTools" isMenu="true"/>
+                                 menuId="fileTools" resourceBundleName="locale.Menu" isMenu="true"/>
 
     <ToolFxmlLoaderConfiguration>
-        <className>org.baiyi.javaFxTool.fxmlView.tool.PathWatchToolView</className>
-        <title>PathWatchTool</title>
+        <className>org.baiyi.javaFxTool.fxmlView.tool.FileAnaylizeFxmlView</className>
+        <title>FileAnaylize</title>
         <menuParentId>fileTools</menuParentId>
     </ToolFxmlLoaderConfiguration>
 

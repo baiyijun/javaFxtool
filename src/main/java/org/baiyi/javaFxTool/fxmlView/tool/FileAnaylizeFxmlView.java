@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Scope;
 
 @Scope("prototype")
 @Lazy
-@FXMLView(value = "/org/baiyi/javaFxTool/fxmlView/tool/PathWatchTool.fxml")
-public class PathWatchToolView extends AbstractFxmlView {
+@FXMLView(value = "/org/baiyi/javaFxTool/fxmlView/tool/FileAnaylize.fxml")
+public class FileAnaylizeFxmlView extends AbstractFxmlView {
 }

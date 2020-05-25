@@ -1,4 +1,4 @@
-package org.baiyi.javaFxTool.model;
+package org.baiyi.javaFxTool.configration;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

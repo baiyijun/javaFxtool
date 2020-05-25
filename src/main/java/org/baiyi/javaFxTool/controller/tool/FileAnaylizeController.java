@@ -8,8 +8,8 @@ import javafx.fxml.FXML;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.baiyi.javaFxTool.services.tool.PathWatchToolService;
-import org.baiyi.javaFxTool.view.tool.PathWatchToolView;
+import org.baiyi.javaFxTool.services.tool.FileAnaylizeService;
+import org.baiyi.javaFxTool.view.tool.FileAnaylizeView;
 import org.springframework.context.annotation.Lazy;
 
 import java.io.File;
@@ -19,8 +19,8 @@ import java.util.ResourceBundle;
 /**
  * @ClassName: PathWatchToolController
  * @Description: 文件夹监控工具
- * @author: xufeng
- * @date: 2019/4/27 0027 1:06
+ * @author:
+ * @date: 2019/10/27 1027 1:06
  */
 
 @Getter
@@ -28,8 +28,8 @@ import java.util.ResourceBundle;
 @Slf4j
 @Lazy
 @FXMLController
-public class PathWatchToolController extends PathWatchToolView {
-    private PathWatchToolService pathWatchToolService = new PathWatchToolService(this);
+public class FileAnaylizeController extends FileAnaylizeView {
+    private FileAnaylizeService pathWatchToolService = new FileAnaylizeService(this);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
