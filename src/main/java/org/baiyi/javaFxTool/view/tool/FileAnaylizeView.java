@@ -2,10 +2,7 @@ package org.baiyi.javaFxTool.view.tool;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +25,8 @@ public abstract class FileAnaylizeView implements Initializable {
     @FXML
     protected Button watchButton;
     @FXML
-    protected TextField ourcode;
-    @FXML
     protected TextArea watchLogTextArea;
+    @FXML
+    protected ChoiceBox<String> ourcodeChoiceBox;
 
 }

@@ -30,6 +30,8 @@ import java.util.ResourceBundle;
 @FXMLController
 public class FileAnaylizeController extends FileAnaylizeView {
     private FileAnaylizeService pathWatchToolService = new FileAnaylizeService(this);
+    private String[] ourcode = new String[]{
+            "T02", "T10", "T12", "T13", "T14"};
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -39,6 +41,8 @@ public class FileAnaylizeController extends FileAnaylizeView {
     }
 
     private void initView() {
+        this.ourcodeChoiceBox.getItems().addAll(this.ourcode);
+        this.ourcodeChoiceBox.setValue(ourcode[0]);
     }
 
     private void initEvent() {
@@ -48,9 +52,10 @@ public class FileAnaylizeController extends FileAnaylizeView {
     private void initService() {
     }
 
+
     @FXML
     private void watchPathAction(ActionEvent event) {
-        File file = FileChooserUtil.chooseDirectory();
+        File file = FileChooserUtil.chooseFile();
         if (file != null) {
             watchPathTextField.setText(file.getPath());
         }
@@ -58,12 +63,16 @@ public class FileAnaylizeController extends FileAnaylizeView {
 
     @FXML
     private void watchAction(ActionEvent event) throws Exception {
-        if ("监控".equals(watchButton.getText())) {
-            pathWatchToolService.watchAction();
-            watchButton.setText("停止监控");
-        } else {
-            pathWatchToolService.stopWatchAction();
-            watchButton.setText("监控");
+        try {
+            if ("解析".equals(watchButton.getText())) {
+                pathWatchToolService.watchAction();
+               // watchButton.setText("解析中....");
+            } else {
+                pathWatchToolService.stopWatchAction();
+                //watchButton.setText("解析");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

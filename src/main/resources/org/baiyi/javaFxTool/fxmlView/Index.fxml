@@ -3,43 +3,51 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.baiyi.javaFxTool.controller.IndexController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.baiyi.javaFxTool.controller.IndexController">
     <children>
-        <BorderPane layoutY="2.0" prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
+        <BorderPane layoutY="2.0" prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
             <top>
                 <HBox alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
                     <children>
                         <MenuBar fx:id="mainMenuBar" cache="true">
                             <menus>
-                        <Menu mnemonicParsing="false" />
+                                <Menu mnemonicParsing="false"/>
                                 <Menu fx:id="fileMenu" mnemonicParsing="false" text="%File">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#closeAllTabAction" text="%closeAllTab" />
-                                        <MenuItem mnemonicParsing="false" onAction="#openAllTabAction" text="%openAllTab" />
-                                        <MenuItem mnemonicParsing="false" onAction="#addNodepadAction" text="%addNodepad" />
-                                        <MenuItem mnemonicParsing="false" onAction="#exitAction" text="%Exit" />
+                                        <MenuItem mnemonicParsing="false" onAction="#closeAllTabAction"
+                                                  text="%closeAllTab"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#openAllTabAction"
+                                                  text="%openAllTab"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#addNodepadAction"
+                                                  text="%addNodepad"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#exitAction" text="%Exit"/>
                                     </items>
                                 </Menu>
-                                <Menu fx:id="toolsMenu" mnemonicParsing="false" text="%Tools" />
+                                <Menu fx:id="toolsMenu" mnemonicParsing="false" text="%Tools"/>
                                 <Menu fx:id="helpMenu" mnemonicParsing="false" text="%Help">
                                     <items>
                                         <Menu mnemonicParsing="false" text="%SetLanguage">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#setLanguageAction" text="简体中文" />
-                                                <MenuItem mnemonicParsing="false" onAction="#setLanguageAction" text="English" />
+                                                <MenuItem mnemonicParsing="false" onAction="#setLanguageAction"
+                                                          text="简体中文"/>
+                                                <MenuItem mnemonicParsing="false" onAction="#setLanguageAction"
+                                                          text="English"/>
                                             </items>
                                         </Menu>
-                                        <MenuItem mnemonicParsing="false" onAction="#aboutAction" text="%About" />
+                                        <MenuItem mnemonicParsing="false" onAction="#aboutAction" text="%About"/>
                                     </items>
                                 </Menu>
                             </menus>
                         </MenuBar>
-                        <CheckBox fx:id="singleWindowBootCheckBox" mnemonicParsing="false" text="%singleWindowBootCheckBox" />
+                        <CheckBox fx:id="singleWindowBootCheckBox" mnemonicParsing="false"
+                                  text="%singleWindowBootCheckBox"/>
                     </children>
                 </HBox>
             </top>
             <center>
-                <TabPane fx:id="tabPaneMain" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
+                <TabPane fx:id="tabPaneMain" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER"/>
             </center>
         </BorderPane>
     </children>
