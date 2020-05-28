@@ -9,11 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.baiyi.javaFxTool.controller.tool.FileAnaylizeController;
 import org.baiyi.javaFxTool.model.business.Co_ToExData;
 import org.baiyi.javaFxTool.model.business.Co_Trancodeconfig_Tmp;
 import org.baiyi.javaFxTool.model.business.Co_TxtAnalyze;
 import org.baiyi.javaFxTool.model.business.ParaTransportVO;
+import org.baiyi.javaFxTool.services.tool.FileAnaylizeService;
 import org.baiyi.javaFxTool.utils.ApplicationContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class AnaylizeFileRecv {
 
     private String userHomePath;
 
-    private FileAnaylizeController fileAnaylizeController;
+    private FileAnaylizeService fileAnaylizeService;
 
 
     //初始化赋值方法
@@ -72,20 +72,15 @@ public class AnaylizeFileRecv {
      * @Author: bai
      * @Date: 2019/8/24 15:47
      */
-    public void makeWatch(final String filepath) {
+    public void makeWatch(final String filepath, FileAnaylizeService fileAnaylizeService) {
         try {
             initMethodMap();
             applicationContext = ApplicationContextHolder.getApplicationContext();
-            fileAnaylizeController = applicationContext.getBean(FileAnaylizeController.class);
+            this.fileAnaylizeService = fileAnaylizeService;
             userHomePath = FileUtil.getUserHomePath() + File.separator + "desktop" + File.separator + "解析结果";
             //解析buscd
             String mark = getDataSetCodeFormFile(filepath);
             receiveFile(filepath, mark);
-            try {
-                fileAnaylizeController.getWatchButton().setText("解析");
-            } catch (Exception e) {
-                logger.error(e.toString());
-            }
         } catch (Exception e) {
             logger.error(e.toString());
             //  e.printStackTrace();
@@ -161,10 +156,11 @@ public class AnaylizeFileRecv {
         }
         if (saveFile(paraMap)) {
             logger.info("本地化物理文件成功");
-            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "本地化物理文件成功" + "\n");
+
+            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "本地化物理文件成功" + "\n");
         } else {
             logger.error("本地化物理文件失败");
-            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "本地化物理文件失败" + "\n");
+            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "本地化物理文件失败" + "\n");
         }
     }
 
@@ -212,16 +208,16 @@ public class AnaylizeFileRecv {
         pvo = (ParaTransportVO) mHashMap.get("paraVO");
         // 开始解压zip文件
         logger.info("开始解压文件");
-        fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "开始解压文件" + "\n");
+        fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "开始解压文件" + "\n");
         // 解压之前的文件路径
         String zipFilePath = pvo.getFilePath() + File.separator + pvo.getFileName();
         // 解压之后的路径
         String zipToPath = pvo.getFilePath() + File.separator + pvo.getFileName().split("\\.")[0];// 解压之后的文件路径
         logger.info("文件解压前后路径为：" + zipFilePath + "，" + zipToPath);
-        fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "文件解压前后路径为：" + zipFilePath + "，" + zipToPath + "\n");
+        fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "文件解压前后路径为：" + zipFilePath + "，" + zipToPath + "\n");
         unZip(zipFilePath, zipToPath);
         logger.info("解压zip完毕");
-        fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "解压zip完毕" + "\n");
+        fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "解压zip完毕" + "\n");
     }
 
     //存放解压后文件
@@ -343,7 +339,7 @@ public class AnaylizeFileRecv {
     //解析索引文件
     private void analyIndexFile(File f, ParaTransportVO pvo, File[] files) throws Exception {
         logger.info("解析索引文件开始！");
-        fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "解析索引文件开始！" + "\n");
+        fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "解析索引文件开始！" + "\n");
         BufferedReader br;
         String lineValue = null;
         try {
@@ -366,49 +362,49 @@ public class AnaylizeFileRecv {
                         if (!pvo.getFileName().split("\\.")[0].split("_")[3].equals(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "的值与指令包的编号不同！";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 2) {
                         if (!"TXT".equalsIgnoreCase(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "行数据值不正确，请检查导入文件!";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 3) {
                         if (!"V1.0".equalsIgnoreCase(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "行数据值不正确，请检查导入文件!";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 4) {
                         if (lineValue.trim() == null && "".equals(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "行数据值不正确，请检查导入文件!";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 5) {
                         if (lineValue.trim() == null && "".equals(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "行数据值不正确，请检查导入文件!";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 6) {
                         if (!pvo.getFileName().split("\\.")[0].split("_")[2].equals(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "行日期与压缩包日期不一致！";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 7) {
                         if (lineValue.trim() == null && "".equals(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "行数据值不正确，请检查导入文件!";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 8) {
@@ -416,7 +412,7 @@ public class AnaylizeFileRecv {
                         if (lineValue.trim() == null && "".equals(lineValue.trim())) {
                             String errorInfo = "index_文件第" + flagNum + "行数据值不正确，请检查导入文件!";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 9) {
@@ -425,7 +421,7 @@ public class AnaylizeFileRecv {
                         } catch (NumberFormatException e) {
                             String errorInfo = "index_文件第" + flagNum + "行数据值不正确，请检查导入文件!";
                             logger.error("errInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
 
                         }
                     }
@@ -446,30 +442,30 @@ public class AnaylizeFileRecv {
                             if (num == files.length - 1) {
                                 String errorInfo = "index_文件名" + lineValue + "与实际文件名不一致！";
                                 logger.error("errInfo-->" + errorInfo);
-                                fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                                fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                             }
                         }
                     } catch (StringIndexOutOfBoundsException e) {
                         String errorInfo = "index_导入文件的记录数与recordNumber对应的数字不一致，请检查导入文件!";
                         logger.error("errInfo-->" + errorInfo);
-                        fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                        fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                     }
                     // 判断是否有空行
                 } else if (lineValue.length() < 1) {
                     String errorInfo = "index_文件第" + flagNum + "行数据为空，请检查导入文件!";
                     logger.error("errInfo-->" + errorInfo);
-                    fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                    fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                 }
                 endLine = lineValue;
             }
             if ("".equals(endLine) || endLine == null) {
                 String errorInfo = "index_文件中最后一行未找到END结束符，请检查导入文件!";
                 logger.error("errInfo-->" + errorInfo);
-                fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
             }
             br.close();
             logger.info("解析索引文件结束！");
-            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "解析索引文件结束！" + "\n");
+            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "解析索引文件结束！" + "\n");
         } catch (Exception e) {
             logger.error(e.toString());
         }
@@ -545,61 +541,63 @@ public class AnaylizeFileRecv {
                         if (!errorFileName.split("_")[5].equals(lineValue.trim())) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值与数据文件的序号不同！";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 2) {
                         if (!"TXT".equalsIgnoreCase(lineValue.trim())) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值不符合要求!";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 3) {
                         if (!"V1.0".equalsIgnoreCase(lineValue.trim())) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值不符合要求!";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 4) {
                         if (StringUtils.isEmpty(lineValue)) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值不符合要求!";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 5) {
                         if (StringUtils.isEmpty(lineValue)) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值不符合要求!";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 6) {
                         if (!pvo.getFileName().split("\\.")[0].split("_")[2].equals(lineValue.trim())) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行日期与压缩包日期不一致！";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 7) {
                         if (StringUtils.isEmpty(lineValue)) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值不符合要求!";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 8) {
                         if (StringUtils.isEmpty(lineValue)) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值不符合要求!";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     if (flagNum == 9) {
                         if (!StringUtils.isEmpty(lineValue) && !dataSetCode.equals(lineValue.trim())) {
                             String errorInfo = errorFileName + "_文件第" + flagNum + "行的值不符合要求！";
                             logger.error("txt文件中errorInfo-->" + errorInfo);
-                            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                         }
                     }
                     // 在此判断数据项的每一项，数据长度，非空字段判断
@@ -613,14 +611,18 @@ public class AnaylizeFileRecv {
                      * 校验字段数与字段值
                      */
                     if (startRow + nameNum == flagNum && !Nflag && Xflag) {
-                        String str = co_TxtAnalyzs.get(co_TxtAnalyzs.size() - 1).getRefield();
-                        if (!str.equalsIgnoreCase(lineValue.trim())) {
-                            String errorInfo = "文件字段名不符合规范";
-                            while ((lineValue = br.readLine()) != null) {
-                                // 获得最后一行数据值
-                                endLine = lineValue;
+                        try {
+                            String str = co_TxtAnalyzs.get(co_TxtAnalyzs.size() - 1).getRefield();
+                            if (!str.equalsIgnoreCase(lineValue.trim())) {
+                                String errorInfo = "文件字段名不符合规范";
+                                while ((lineValue = br.readLine()) != null) {
+                                    // 获得最后一行数据值
+                                    endLine = lineValue;
+                                }
+                                return endLine;
                             }
-                            return endLine;
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                     // 至此（startRow+1+nameNum）为数据值数量的行
@@ -652,13 +654,13 @@ public class AnaylizeFileRecv {
                     } catch (StringIndexOutOfBoundsException e) {
                         String errorInfo = errorFileName + "_导入文件的记录数与recordNumber对应的数字不一致，请检查导入文件!";
                         logger.error("errorInfo-->" + errorInfo);
-                        fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                        fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                     }
                     // 校验数据中有空行的情况
                 } else {
                     String errorInfo = errorFileName + "_文件第" + flagNum + "行数据为空，请检查导入文件!";
                     logger.error("errorInfo-->" + errorInfo);
-                    fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                    fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
                 }
                 // 获得最后一行数据值
                 endLine = lineValue;
@@ -667,7 +669,7 @@ public class AnaylizeFileRecv {
             if (!endLine.equals("END") || "".equals(endLine) || endLine == null) {
                 String errorInfo = errorFileName + "_文件中最后一行未找到END结束符，请检查导入文件!";
                 logger.error("errorInfo-->" + errorInfo);
-                fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
             }
             //生成excel文件
             genExcelRowAndCell(fileName, exList, co_TxtAnalyzs);
@@ -718,7 +720,7 @@ public class AnaylizeFileRecv {
             } catch (NumberFormatException e) {
                 logger.error(e.toString());
                 String errorInfo = errorFileName + "_文件" + flagNum + "行字段名" + mCo_TxtAnalyze.getRefield() + "数据类型转换错误!";
-                fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
             }
         }
     }
@@ -768,7 +770,7 @@ public class AnaylizeFileRecv {
                 logger.info("接口：" + dataSetCode + " 标识：" + flag + " 数据库长度: " + fieldLength + " txt中长度：" + (lineValue.getBytes(charset).length));
                 String errorInfo = errorFileName + "_文件第" + flagNum + "行中数据字节长度不对！";
                 logger.error("errorInfo-->" + errorInfo);
-                fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
             }
         } catch (Exception e) {
             logger.error(e.toString());
@@ -787,7 +789,7 @@ public class AnaylizeFileRecv {
             if ("Y".equals(co_TxtAnalyze.getC1())) {
                 String errorInfo = errFileName + "_文件" + flagNum + "行字段名" + co_TxtAnalyze.getRefield() + "为必输项,但未找到具体的值!!很可能之前的字段长度不对";
                 logger.error("errorInfo-->" + errorInfo);
-                fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
+                fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + errorInfo + "\n");
             }
         }
         return reslutValue + "," + startAdrs;
@@ -816,10 +818,10 @@ public class AnaylizeFileRecv {
             }
         } catch (UnsupportedEncodingException e) {
             logger.error("解析数据时,编码集错误-->" + e.toString());
-            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "解析数据时,编码集错误" + "\n");
+            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "解析数据时,编码集错误" + "\n");
         } catch (ArrayIndexOutOfBoundsException e) {
             logger.error("解析数据时,数组下标越界-->" + e.toString());
-            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "解析数据时,数组下标越界" + "\n");
+            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "解析数据时,数组下标越界" + "\n");
         }
         return reslutV;
     }
@@ -848,6 +850,7 @@ public class AnaylizeFileRecv {
         filename = filename.split("\\.")[0] + ".xls";
         String excelFilePath = userHomePath + File.separator + filename;
         logger.info("excel路径为-->" + excelFilePath);
+        fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "excel路径为-->" + excelFilePath + "\n");
         File file = new File(excelFilePath);
         FileOutputStream fileOutputStream = null;
         SXSSFWorkbook sxssfWorkbook = null;
@@ -882,19 +885,30 @@ public class AnaylizeFileRecv {
             int colNum = 0;//列
             //开始生成表头
             Row titleRow = (Row) sheet.createRow(rowNum);
+            Cell cell = null;
             for (int i = 0; i < co_txtAnalyzes.size(); i++) {
                 sheet.setColumnWidth(i, new Integer(co_txtAnalyzes.get(i).getRefieldlength().split(",")[0])
-                        > co_txtAnalyzes.get(i).getRefield().length()
+                        > co_txtAnalyzes.get(i).getC2().length() * 2
                         ? new Integer(co_txtAnalyzes.get(i).getRefieldlength().split(",")[0]) * 300
-                        : co_txtAnalyzes.get(i).getRefield().length() * 300);
-                Cell cell = titleRow.createCell(i);
+                        : co_txtAnalyzes.get(i).getC2().length() * 2 * 275);
+                cell = titleRow.createCell(i);
                 cell.setCellStyle(titleCellStyle);
                 cell.setCellValue(co_txtAnalyzes.get(i).getRefield());
             }
             rowNum++;
-            //副行（字段长度）
+            //（汉字意思）
+            Row chinarow = (Row) sheet.createRow(rowNum);
+            cell = null;
+            for (colNum = 0; colNum < co_txtAnalyzes.size(); colNum++) {
+                cell = chinarow.createCell(colNum);
+                cell.setCellType(CellType.STRING);
+                cell.setCellStyle(titleCellStyle);
+                cell.setCellValue(co_txtAnalyzes.get(colNum).getC2());
+            }
+            rowNum++;
+
+            //（字段长度）
             Row row = (Row) sheet.createRow(rowNum);
-            Cell cell = null;
             for (colNum = 0; colNum < co_txtAnalyzes.size(); colNum++) {
                 cell = row.createCell(colNum);
                 cell.setCellType(CellType.STRING);
@@ -903,9 +917,9 @@ public class AnaylizeFileRecv {
             }
             rowNum++;
 
-            for (; rowNum < co_ToExDatas.size() + 1; rowNum++) {
+            for (; rowNum < co_ToExDatas.size() + 3; rowNum++) {
                 row = sheet.createRow(rowNum);
-                Co_ToExData co_toExData = co_ToExDatas.get(rowNum - 1);
+                Co_ToExData co_toExData = co_ToExDatas.get(rowNum - 3);
 
                 for (int i = 0; i < co_txtAnalyzes.size(); i++) {
                     cell = row.createCell(i);
@@ -923,7 +937,7 @@ public class AnaylizeFileRecv {
             fileOutputStream.flush();
             fileOutputStream.close();
             logger.info("Excel-->" + filename + "生成完毕");
-            fileAnaylizeController.getWatchLogTextArea().appendText("[" + DateUtil.now() + "] " + "Excel-->" + filename + "生成完毕" + "\n");
+            fileAnaylizeService.appendText("[" + DateUtil.now() + "] " + "Excel-->" + filename + "生成完毕" + "\n");
             Runtime runtime = null;
             try {
                 runtime = Runtime.getRuntime();

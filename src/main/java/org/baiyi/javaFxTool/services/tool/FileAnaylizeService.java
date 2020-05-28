@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.baiyi.javaFxTool.controller.tool.FileAnaylizeController;
 import org.baiyi.javaFxTool.services.business.AnaylizeFileRecv;
 import org.baiyi.javaFxTool.services.business.AnaylizeFileSend;
-import org.baiyi.javaFxTool.utils.ApplicationContextHolder;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,8 +39,8 @@ public class FileAnaylizeService {
 
     public FileAnaylizeService(FileAnaylizeController fileAnaylizeController) {
         this.fileAnaylizeController = fileAnaylizeController;
-        this.anaylizeFileSend = ApplicationContextHolder.getApplicationContext().getBean(AnaylizeFileSend.class);
-        this.anaylizeFileRecv = ApplicationContextHolder.getApplicationContext().getBean(AnaylizeFileRecv.class);
+//        this.anaylizeFileSend = ApplicationContextHolder.getApplicationContext().getBean(AnaylizeFileSend.class);
+//        this.anaylizeFileRecv = ApplicationContextHolder.getApplicationContext().getBean(AnaylizeFileRecv.class);
     }
 
     public void watchAction() throws Exception {
@@ -76,9 +75,9 @@ public class FileAnaylizeService {
             ThreadUtil.sleep(300);
             try {
                 if (FileUtil.getName(watchPath).startsWith(ourcode)) {
-                    anaylizeFileSend.makeWatch(watchPath + "");
+                    new AnaylizeFileSend().makeWatch(watchPath + "",this);
                 } else {
-                    anaylizeFileRecv.makeWatch(watchPath + "");
+                    new AnaylizeFileRecv().makeWatch(watchPath + "",this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -92,5 +91,9 @@ public class FileAnaylizeService {
             thread.stop();
             thread = null;
         }
+    }
+
+    public void appendText(String text) {
+        fileAnaylizeController.getWatchLogTextArea().appendText(text);
     }
 }

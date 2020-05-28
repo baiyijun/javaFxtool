@@ -1,6 +1,7 @@
 package org.baiyi.javaFxTool.controller.tool;
 
 
+import cn.hutool.core.thread.ThreadUtil;
 import com.xwintop.xcore.util.javafx.FileChooserUtil;
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.event.ActionEvent;
@@ -55,6 +56,9 @@ public class FileAnaylizeController extends FileAnaylizeView {
 
     @FXML
     private void watchPathAction(ActionEvent event) {
+        if (!watchPathTextField.getText().isEmpty()) {
+            watchPathTextField.setText("");
+        }
         File file = FileChooserUtil.chooseFile();
         if (file != null) {
             watchPathTextField.setText(file.getPath());
@@ -65,11 +69,16 @@ public class FileAnaylizeController extends FileAnaylizeView {
     private void watchAction(ActionEvent event) throws Exception {
         try {
             if ("解析".equals(watchButton.getText())) {
+                if(!watchLogTextArea.getText().isEmpty()) {
+                    watchLogTextArea.clear();
+                }
+                watchButton.setText("解析中....");
                 pathWatchToolService.watchAction();
-               // watchButton.setText("解析中....");
+                ThreadUtil.sleep(3000);
+                watchButton.setText("解析");
             } else {
                 pathWatchToolService.stopWatchAction();
-                //watchButton.setText("解析");
+                watchButton.setText("解析");
             }
         } catch (Exception e) {
             e.printStackTrace();
