@@ -72,10 +72,9 @@ public class FileAnaylizeController extends FileAnaylizeView {
                 if(!watchLogTextArea.getText().isEmpty()) {
                     watchLogTextArea.clear();
                 }
-                watchButton.setText("解析中....");
+                ThreadUtil.sleep(1000);
                 pathWatchToolService.watchAction();
-                ThreadUtil.sleep(3000);
-                watchButton.setText("解析");
+                ThreadUtil.sleep(1000);
             } else {
                 pathWatchToolService.stopWatchAction();
                 watchButton.setText("解析");

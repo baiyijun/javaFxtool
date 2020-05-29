@@ -85,8 +85,8 @@ public class JavaFxViewUtil {
      */
     public static Scene getJFXDecoratorScene(JFXDecorator decorator) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.width / 1.35;
-        double height = screenSize.height / 1.2;
+        double width = screenSize.width / 1.62;
+        double height = screenSize.height / 1.44;
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         if (width > bounds.getWidth() || height > bounds.getHeight()) {//解决屏幕缩放问题
             width = bounds.getWidth() / 2;

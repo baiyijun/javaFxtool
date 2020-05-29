@@ -1,7 +1,6 @@
 package org.baiyi.javaFxTool.services.tool;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import com.xwintop.xcore.util.javafx.TooltipUtil;
 import javafx.geometry.Pos;
 import lombok.Getter;
@@ -72,7 +71,6 @@ public class FileAnaylizeService {
         ThreadPoolExecutor threadPoolExecutor = org.baiyi.javaFxTool.utils.ThreadUtil.getThreadPoolExecutor();
         StringBuffer stringBuffer = new StringBuffer();
         thread = new Thread(() -> {
-            ThreadUtil.sleep(300);
             try {
                 if (FileUtil.getName(watchPath).startsWith(ourcode)) {
                     new AnaylizeFileSend().makeWatch(watchPath + "",this);
